@@ -1,13 +1,13 @@
 <?php
- 
+
 namespace App;
- 
+
 use Illuminate\Database\Eloquent\Model;
- 
+
 class Ingreso extends Model
 {
     protected $fillable = [
-        'idproveedor', 
+        'idproveedor',
         'idusuario',
         'tipo_comprobante',
         'serie_comprobante',
@@ -18,6 +18,7 @@ class Ingreso extends Model
         'pago1',
         'pago2',
         'pago3',
+        'exchange_rate',
         'estado',
         'fecha_2',
         'fecha_3'
@@ -30,6 +31,6 @@ class Ingreso extends Model
      {
          return $this->belongsTo('App\Proveedor');
      }
-  
-  
+
+
 }

@@ -649,11 +649,17 @@
                 }).then(function (response) {
                     me.listado=1;
                     me.listarTransferencia(1,'','num_comprobante');
+                    swal(
+                        'Confirmado!',
+                        'La Transferencia ha sido Registrada con éxito.',
+                        'success'
+                    )
                 }).catch(function (error) {
                     console.log(error);
                 })
                 .finally(() => {
                     this.isAddingTransfer = false;
+                    me.listarTransferencia(1, me.buscar, me.criterio);
                 });
 
 

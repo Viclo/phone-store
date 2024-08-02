@@ -73,7 +73,7 @@
                                             </template>
                                         </td>
                                         <td v-text="venta.usuario"></td>
-                                        <td v-text="venta.nombre"></td> 
+                                        <td v-text="venta.nombre"></td>
                                         <td v-text="venta.tipo_comprobante"></td>
                                         <td v-text="venta.vendedor"></td>
                                         <td v-text="venta.num_comprobante"></td>
@@ -82,7 +82,7 @@
                                         <td>{{((venta.total*1)+(venta.total/(1-venta.impuesto))-venta.total).toFixed(2)}}</td>
                                         <td v-text="venta.impuesto"></td>
                                         <td v-text="venta.estado"></td>
-                                    </tr>                                
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -116,7 +116,7 @@
                                         placeholder="Buscar Clientes..."
                                         :onChange="getDatosCliente"
                                     >
-                                        
+                                    
                                     </v-select>
                                 </div>
                             </div>
@@ -130,7 +130,7 @@
                                     <select class="form-control" v-model="vendedor">
                                             <option value="0" disabled>Seleccione</option>
                                             <option v-for="user in arrayUser" :key="user.id" :value="user.nom" v-text="user.nom"></option>
-                                    </select>  
+                                    </select>
                             
                             </div>
                             <div class="col-md-3">
@@ -175,7 +175,7 @@
                                         <input type="text" class="form-control" v-model="codigo" @keyup.enter="buscarArticulo()" placeholder="Ingrese artículo">
                                         <button @click="abrirModal()" class="btn btn-primary">...</button>
                                         <input type="text" readonly class="form-control" v-model="articulo">
-                                    </div>                                    
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-2">
@@ -203,6 +203,12 @@
                                       <option value="Bolivianos">Bolivianos</option>
                                       <option value="Dolares">Dolares</option>
                                     </select>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label>Tipo de Cambio al Dólar</label>
+                                    <input type="number" value="6.96" class="form-control" v-model="exchange_rate">
                                 </div>
                             </div>
                             <div class="col-md-2">
@@ -240,14 +246,14 @@
                                                 <p v-text="detalle.precio"></p>
                                             </td>
                                             <td v-else-if="detalle.estado==0 && detalle.idcategoria==2">
-                                                <p>{{ detalle.precio/6.96 }}</p>
+                                                <p>{{ detalle.precio/exchange_rate }}</p>
                                             </td>
-                                            <td v-if="detalle.estado==0"> 
+                                            <td v-if="detalle.estado==0">
                                                 <span style="color:red;" v-show="detalle.cantidad*1 > detalle.stock*1">Stock: {{detalle.stock}}</span>
                                                 <input v-model="detalle.cantidad" type="number"  class="form-control">
                                             </td>
                                             <td v-if="detalle.estado==0 && detalle.idcategoria==1 || detalle.idcategoria==3">
-                                                 <span style="color:red;" v-show="detalle.descuento>((detalle.precio/6.96)*detalle.cantidad)">Descuento superior</span>
+                                                <span style="color:red;" v-show="detalle.descuento>((detalle.precio/exchange_rate)*detalle.cantidad)">Descuento superior</span>
                                                 <input v-model="detalle.descuento" type="number"  class="form-control">
                                             </td>
                                             <td v-else-if="detalle.estado==0 && detalle.idcategoria==2">
@@ -255,7 +261,7 @@
                                                 <input v-model="detalle.descuento" type="number"  class="form-control">
                                             </td>
                                             <td v-if="detalle.estado==0 && detalle.idcategoria==2">
-                                                {{(detalle.precio/6.96)*detalle.cantidad-detalle.descuento}}
+                                                {{(detalle.precio/exchange_rate)*detalle.cantidad-detalle.descuento}}
                                             </td>
                                             <td v-else-if="detalle.estado==0 && detalle.idcategoria==1 || detalle.idcategoria==3">
                                                 {{detalle.precio*detalle.cantidad-detalle.descuento}}
@@ -275,9 +281,9 @@
                                         </tr>
                                         <tr style="background-color: #CEECF5;">
                                             <td colspan="5" align="right"><strong>Total Neto en Bolivianos:</strong></td>
-                                            <td>$ {{((total*6.96)+(totalImpuesto*6.96)).toFixed(2)}}</td>
+                                            <td>$ {{((total*exchange_rate)+(totalImpuesto*exchange_rate)).toFixed(2)}}</td>
                                         </tr>
-                                    </tbody>  
+                                    </tbody>
                                     <tbody v-else-if="arrayDetalle.length && moneda=='Bolivianos'">
                                         <tr v-for="(detalle,index) in arrayDetalle" :key="detalle.id">
                                             <td v-if="detalle.estado==0">
@@ -293,9 +299,9 @@
                                                 <p>{{ detalle.precio }}</p>
                                             </td>
                                             <td v-else-if="detalle.estado==0 && detalle.idcategoria==1 || detalle.idcategoria==3">
-                                                <p>{{ detalle.precio*6.96 }}</p>
+                                                <p>{{ detalle.precio*exchange_rate }}</p>
                                             </td>
-                                            <td v-if="detalle.estado==0"> 
+                                            <td v-if="detalle.estado==0">
                                                 <span style="color:red;" v-show="detalle.cantidad*1>detalle.stock*1">Stock: {{detalle.stock}}</span>
                                                 <input v-model="detalle.cantidad" type="number"  class="form-control">
                                             </td>
@@ -304,14 +310,14 @@
                                                 <input v-model="detalle.descuento" type="number"  class="form-control">
                                             </td>
                                             <td v-else-if="detalle.estado==0 && detalle.idcategoria==1 || detalle.idcategoria==3">
-                                                 <span style="color:red;" v-show="detalle.descuento>((detalle.precio*6.96)*detalle.cantidad)">Descuento superior</span>
+                                                <span style="color:red;" v-show="detalle.descuento>((detalle.precio*exchange_rate)*detalle.cantidad)">Descuento superior</span>
                                                 <input v-model="detalle.descuento" type="number"  class="form-control">
                                             </td>
                                             <td v-if="detalle.estado==0 && detalle.idcategoria==2">
                                                 {{detalle.precio*detalle.cantidad-detalle.descuento}}
                                             </td>
                                             <td v-else-if="detalle.estado==0 && detalle.idcategoria==1 || detalle.idcategoria==3">
-                                                {{(detalle.precio*6.96)*detalle.cantidad-detalle.descuento}}
+                                                {{(detalle.precio*exchange_rate)*detalle.cantidad-detalle.descuento}}
                                             </td>
                                             
                                         <tr style="background-color: #CEECF5;">
@@ -328,9 +334,9 @@
                                         </tr>
                                         <tr style="background-color: #CEECF5;">
                                             <td colspan="5" align="right"><strong>Total Neto en Dolares:</strong></td>
-                                            <td>$ {{((total/6.96)+(totalImpuesto/6.96)).toFixed(2)}}</td>
+                                            <td>$ {{((total/exchange_rate)+(totalImpuesto/exchange_rate)).toFixed(2)}}</td>
                                         </tr>
-                                    </tbody>                                  
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
@@ -369,14 +375,14 @@
                                                 <input v-model="detalle.codigo" type="text" value="3" class="form-control">
                                             </td>
                                         </tr>
-                                    </tbody>  
+                                    </tbody>
                                     <tbody v-else>
                                         <tr>
                                             <td colspan="5">
                                                 No hay articulos agregados a modo de pago
                                             </td>
                                         </tr>
-                                    </tbody>                                  
+                                    </tbody>
                                 </table>
                                 
                             </div>
@@ -415,7 +421,7 @@
                             <div class="col-md-12">
                                 <button type="button" @click="ocultarDetalle()" class="btn btn-secondary">Cerrar</button>
                                 
-                                            
+                                
                                 
                                 
                                 <button type="button" class="btn btn-primary" @click="registrarVenta()">Registrar Venta</button>
@@ -438,6 +444,12 @@
                                 <div class="form-group">
                                     <label for="">Moneda</label>
                                     <p v-text="moneda"></p>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="">Tipo de Cambio</label>
+                                    <p v-text="exchange_rate"></p>
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -504,7 +516,7 @@
                                                 <p v-text="detalle.precio"></p>
                                             </td>
                                             <td v-else-if=" detalle.idcategoria==2">
-                                                    <p>{{ detalle.precio/6.96 }}</p>
+                                                <p>{{ detalle.precio/exchange_rate }}</p>
                                             </td>
                                             <td v-text="detalle.cantidad">
                                             </td>
@@ -517,26 +529,26 @@
                                                 {{detalle.precio*detalle.cantidad-detalle.descuento}}
                                             </td>
                                             <td v-else-if=" detalle.idcategoria==2">
-                                                {{(detalle.precio/6.96)*detalle.cantidad-detalle.descuento}}
-                                            </td> 
-                                        </tr>    
+                                                {{(detalle.precio/exchange_rate)*detalle.cantidad-detalle.descuento}}
+                                            </td>
+                                        </tr>
                                         <tr style="background-color: #CEECF5;">
-                                            <td colspan="6" align="right"><strong>Total Neto:</strong></td>
+                                            <td colspan="7" align="right"><strong>Total Neto:</strong></td>
                                             <td>$ {{totalParcial=((total*1)+(totalImpuesto*1)).toFixed(2)}}</td>
                                         </tr>
                                         <tr style="background-color: #CEECF5;">
-                                            <td colspan="6" align="right"><strong>Total Impuesto:</strong></td>
+                                            <td colspan="7" align="right"><strong>Total Impuesto:</strong></td>
                                             <td>$ {{totalImpuesto=((total/(1-impuesto))-total).toFixed(2)}}</td>
                                         </tr>
                                         <tr style="background-color: #CEECF5;">
-                                            <td colspan="6" align="right"><strong>Total Parcial:</strong></td>
+                                            <td colspan="7" align="right"><strong>Total Parcial:</strong></td>
                                             <td>$ {{total}}</td>
                                         </tr>
                                         <tr style="background-color: #CEECF5;">
-                                            <td colspan="6" align="right"><strong>Total Neto en Bolivianos:</strong></td>
-                                            <td>$ {{total*6.96 + (totalImpuesto*6.96)}}</td>
+                                            <td colspan="7" align="right"><strong>Total Neto en Bolivianos:</strong></td>
+                                            <td>$ {{(total*exchange_rate + (totalImpuesto*exchange_rate)).toFixed(2)}}</td>
                                         </tr>
-                                    </tbody>  
+                                    </tbody>
                                     <tbody v-else-if="arrayDetalle.length && moneda=='Bolivianos'">
                                         <tr v-for="detalle in arrayDetalle" :key="detalle.id">
                                             <td v-text="detalle.articulo">
@@ -546,7 +558,7 @@
                                             <td v-text="detalle.codigo">
                                             </td>
                                             <td v-if=" detalle.idcategoria==1">
-                                                <p>{{ detalle.precio*6.96 }}</p>
+                                                <p>{{ detalle.precio*exchange_rate }}</p>
                                             </td>
                                             <td v-else-if=" detalle.idcategoria==2">
                                                     <p>{{ detalle.precio }}</p>
@@ -559,29 +571,29 @@
                                             </td>
                                             <td v-else>A modo de Pago ({{detalle.descripcion}}) </td>
                                             <td v-if=" detalle.idcategoria==1">
-                                                {{(detalle.precio*6.96)*detalle.cantidad-detalle.descuento}}
+                                                {{(detalle.precio*exchange_rate)*detalle.cantidad-detalle.descuento}}
                                             </td>
                                             <td v-else-if=" detalle.idcategoria==2">
                                                 {{detalle.precio*detalle.cantidad-detalle.descuento}}
                                             </td>
-                                        </tr>    
+                                        </tr>
                                         <tr style="background-color: #CEECF5;">
-                                            <td colspan="6" align="right"><strong>Total Neto:</strong></td>
+                                            <td colspan="7" align="right"><strong>Total Neto:</strong></td>
                                             <td>$ {{totalParcial=((total*1)+(totalImpuesto*1)).toFixed(2)}}</td>
                                         </tr>
                                         <tr style="background-color: #CEECF5;">
-                                            <td colspan="6" align="right"><strong>Total Impuesto:</strong></td>
+                                            <td colspan="7" align="right"><strong>Total Impuesto:</strong></td>
                                             <td>$ {{totalImpuesto=((total/(1-impuesto))-total).toFixed(2)}}</td>
                                         </tr>
                                         <tr style="background-color: #CEECF5;">
-                                            <td colspan="6" align="right"><strong>Total Parcial:</strong></td>
+                                            <td colspan="7" align="right"><strong>Total Parcial:</strong></td>
                                             <td>$ {{total}}</td>
                                         </tr>
                                         <tr style="background-color: #CEECF5;">
-                                            <td colspan="6" align="right"><strong>Total Neto en Dolares:</strong></td>
-                                            <td>$ {{total/6.96 + totalImpuesto/6.96}}</td>
+                                            <td colspan="7" align="right"><strong>Total Neto en Dolares:</strong></td>
+                                            <td>$ {{(total/exchange_rate + totalImpuesto/exchange_rate).toFixed(2)}}</td>
                                         </tr>
-                                    </tbody>                                  
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
@@ -593,9 +605,9 @@
                         <template v-if="pago2!=0">
                             <P>Se pago en Cuotas</P>
                             <p>El primer pago fue de {{pago1}}$</p>
-                            <p>Se realizo el segundo pago de {{pago2}}$ en fecha {{fecha2}}</p> 
+                            <p>Se realizo el segundo pago de {{pago2}}$ en fecha {{fecha2}}</p>
                             <template v-if="pago3!=0">
-                            <p>Se realizo el tercer pago de {{pago3}}$ en fecha {{fecha3}} </p> 
+                            <p>Se realizo el tercer pago de {{pago3}}$ en fecha {{fecha3}} </p>
                             </template>
                         </template>
                         <div class="form-group row">
@@ -712,7 +724,7 @@
                                                 <p v-text="detalle.precio"></p>
                                             </td>
                                             <td v-else-if=" detalle.idcategoria==2">
-                                                    <p>{{ detalle.precio/6.96 }}</p>
+                                                    <p>{{ detalle.precio/exchange_rate }}</p>
                                             </td>
                                             <td v-text="detalle.cantidad">
                                             </td>
@@ -725,9 +737,9 @@
                                                 {{detalle.precio*detalle.cantidad-detalle.descuento}}
                                             </td>
                                             <td v-else-if=" detalle.idcategoria==2">
-                                                {{(detalle.precio/6.96)*detalle.cantidad-detalle.descuento}}
+                                                {{(detalle.precio/exchange_rate)*detalle.cantidad-detalle.descuento}}
                                             </td>
-                                        </tr>    
+                                        </tr>
                                         <tr style="background-color: #CEECF5;">
                                             <td colspan="6" align="right"><strong>Total Neto:</strong></td>
                                             <td>$ {{totalParcial=((total*1)+(totalImpuesto*1)).toFixed(2)}}</td>
@@ -742,9 +754,9 @@
                                         </tr>
                                         <tr style="background-color: #CEECF5;">
                                             <td colspan="6" align="right"><strong>Total Neto en Bolivianos:</strong></td>
-                                            <td>$ {{total*6.96+ totalImpuesto*6.96}}</td>
+                                            <td>$ {{total*exchange_rate+ totalImpuesto*exchange_rate}}</td>
                                         </tr>
-                                    </tbody>  
+                                    </tbody>
                                     <tbody v-else-if="arrayDetalle.length && moneda=='Bolivianos'">
                                         <tr v-for="detalle in arrayDetalle" :key="detalle.id">
                                             <td v-text="detalle.articulo">
@@ -752,7 +764,7 @@
                                             <td v-text="detalle.codigo">
                                             </td>
                                             <td v-if=" detalle.idcategoria==1">
-                                                <p>{{ detalle.precio*6.96 }}</p>
+                                                <p>{{ detalle.precio*exchange_rate }}</p>
                                             </td>
                                             <td v-else-if=" detalle.idcategoria==2">
                                                     <p>{{ detalle.precio }}</p>
@@ -765,12 +777,12 @@
                                             </td>
                                             <td v-else>A modo de Pago</td>
                                             <td v-if=" detalle.idcategoria==1">
-                                                {{(detalle.precio*6.96)*detalle.cantidad-detalle.descuento}}
+                                                {{(detalle.precio*exchange_rate)*detalle.cantidad-detalle.descuento}}
                                             </td>
                                             <td v-else-if=" detalle.idcategoria==2">
                                                 {{detalle.precio*detalle.cantidad-detalle.descuento}}
                                             </td>
-                                        </tr>    
+                                        </tr>
                                         <tr style="background-color: #CEECF5;">
                                             <td colspan="6" align="right"><strong>Total Neto:</strong></td>
                                             <td>$ {{totalParcial=((total*1)+(totalImpuesto*1)).toFixed(2)}}</td>
@@ -785,9 +797,9 @@
                                         </tr>
                                         <tr style="background-color: #CEECF5;">
                                             <td colspan="6" align="right"><strong>Total Neto en Dolares:</strong></td>
-                                            <td>$ {{total/6.96+totalImpuesto/6.96}}</td>
+                                            <td>$ {{total/exchange_rate+totalImpuesto/exchange_rate}}</td>
                                         </tr>
-                                    </tbody>                                   
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
@@ -852,9 +864,9 @@
                                     <th>Estado</th>
                                     </tr>
                                    </thead>
-                                   <tbody> 
+                                   <tbody>
                                      <tr v-for="articulo in arrayArticulo" :key="articulo.id">
-                                    <template v-if="articulo.nombre_sucursal == oveja">    
+                                    <template v-if="articulo.nombre_sucursal == oveja">
                                     <td>
                                         <button type="button" @click="agregarDetalleModal(articulo)" class="btn btn-success btn-sm">
                                           <i class="icon-check"></i>
@@ -876,7 +888,7 @@
                                         
                                     </td>
                                     </template>
-                                </tr>                                
+                                </tr>
                             </tbody>
                         </table>
                             </div>
@@ -909,13 +921,13 @@
                                         <select class="form-control" v-model="idcategoria">
                                             <option value="0" disabled>Seleccione</option>
                                             <option v-for="categoria in arrayCategoria" :key="categoria.id" :value="categoria.id" v-text="categoria.nombre"></option>
-                                        </select>                                        
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="text-input">Sucursal</label>
                                     <div class="col-md-9">
-                                        <p  v-text="cabras"></p>                                  
+                                        <p  v-text="cabras"></p>
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -924,37 +936,37 @@
                                         <select class="form-control" v-model="idmarca">
                                             <option value="0" disabled>Seleccione</option>
                                             <option v-for="marca in arrayMarca" :key="marca.id" :value="marca.id" v-text="marca.nombre"></option>
-                                        </select>                                        
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="text-input">Nombre</label>
                                     <div class="col-md-9">
-                                        <input type="text" v-model="articuloNombre" class="form-control" placeholder="Nombre de artículo">                                        
+                                        <input type="text" v-model="articuloNombre" class="form-control" placeholder="Nombre de artículo">
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="text-input">Precio Mercado</label>
                                     <div class="col-md-9">
-                                        <input type="number" v-model="precioMercado" class="form-control" placeholder="Precio al Mercado">                                        
+                                        <input type="number" v-model="precioMercado" class="form-control" placeholder="Precio al Mercado">
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="text-input">Precio de Compra</label>
                                     <div class="col-md-9">
-                                        <input type="number" v-model="precioCompra" class="form-control" placeholder="Precio de Compra">                                        
+                                        <input type="number" v-model="precioCompra" class="form-control" placeholder="Precio de Compra">
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="text-input">Codigo o Imei</label>
                                     <div class="col-md-9">
-                                        <input type="text" v-model="codigo" class="form-control" placeholder="Ingrese el Codigo">                                        
+                                        <input type="text" v-model="codigo" class="form-control" placeholder="Ingrese el Codigo">
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="text-input">Descripción</label>
                                     <div class="col-md-9">
-                                        <input type="text" v-model="descripcion" class="form-control" placeholder="Descripción del artículo">                                        
+                                        <input type="text" v-model="descripcion" class="form-control" placeholder="Descripción del artículo">
                                     </div>
                                 </div>
                             </form>
@@ -982,7 +994,7 @@
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="text-input">Nombre (*)</label>
                                     <div class="col-md-9">
-                                        <input type="text" v-model="nombre" class="form-control" placeholder="Nombre de la persona">                                        
+                                        <input type="text" v-model="nombre" class="form-control" placeholder="Nombre de la persona">
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -992,13 +1004,13 @@
                                             <option value="DNI">DNI</option>
                                             <option value="RUC">RUC</option>
                                             <option value="PASS">PASS</option>
-                                        </select>                                    
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="text-input">Número</label>
                                     <div class="col-md-9">
-                                        <input type="text" v-model="num_documento" class="form-control" placeholder="Número de documento">                                        
+                                        <input type="text" v-model="num_documento" class="form-control" placeholder="Número de documento">
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -1056,6 +1068,7 @@
                 pago1:0.0,
                 pago2:0.0,
                 pago3:0.0,
+                exchange_rate:6.96,
                 totalImpuesto: 0.0,
                 totalParcial: 0.0,
                 arrayVenta : [],
@@ -1161,22 +1174,22 @@
                     return [];
                 }
                 
-                var from = this.pagination.current_page - this.offset; 
+                var from = this.pagination.current_page - this.offset;
                 if(from < 1) {
                     from = 1;
                 }
 
-                var to = from + (this.offset * 2); 
+                var to = from + (this.offset * 2);
                 if(to >= this.pagination.last_page){
                     to = this.pagination.last_page;
-                }  
+                }
 
                 var pagesArray = [];
                 while(from <= to) {
                     pagesArray.push(from);
                     from++;
                 }
-                return pagesArray;             
+                return pagesArray;
 
             },
 
@@ -1189,45 +1202,45 @@
                     if (this.arrayDetalle[i].estado==0) {
                         
                         
-                        resultado=resultado+((this.arrayDetalle[i].precio/6.96)*this.arrayDetalle[i].cantidad-this.arrayDetalle[i].descuento) 
+                        resultado=resultado+((this.arrayDetalle[i].precio/this.exchange_rate)*this.arrayDetalle[i].cantidad-this.arrayDetalle[i].descuento)
                     } else {
-                        modoPago=modoPago+((this.arrayDetalle[i].precioCompra)*1.0)/6.96
+                        modoPago=modoPago+((this.arrayDetalle[i].precioCompra)*1.0)/this.exchange_rate
                     }
                     }else{
                         if (this.arrayDetalle[i].estado==0) {
                         
                         
-                        resultado=resultado+(this.arrayDetalle[i].precio*this.arrayDetalle[i].cantidad-this.arrayDetalle[i].descuento) 
+                        resultado=resultado+(this.arrayDetalle[i].precio*this.arrayDetalle[i].cantidad-this.arrayDetalle[i].descuento)
                     } else {
                         modoPago=modoPago+((this.arrayDetalle[i].precioCompra)*1.0)
                     }
                     }
-                }  
+                }
                 } else {
                     for(var i=0;i<this.arrayDetalle.length;i++){
                     if(this.arrayDetalle[i].idcategoria==2){
                     if (this.arrayDetalle[i].estado==0) {
                         
-                        resultado=resultado+(this.arrayDetalle[i].precio*this.arrayDetalle[i].cantidad-this.arrayDetalle[i].descuento) 
+                        resultado=resultado+(this.arrayDetalle[i].precio*this.arrayDetalle[i].cantidad-this.arrayDetalle[i].descuento)
                     } else {
                         modoPago=modoPago+(this.arrayDetalle[i].precioCompra)*1.0
                     }
                     }else{
                         if (this.arrayDetalle[i].estado==0) {
-                        
-                        resultado=resultado+((this.arrayDetalle[i].precio*6.96)*this.arrayDetalle[i].cantidad-this.arrayDetalle[i].descuento) 
+                            
+                            resultado=resultado+((this.arrayDetalle[i].precio*this.exchange_rate)*this.arrayDetalle[i].cantidad-this.arrayDetalle[i].descuento)
                     } else {
-                        modoPago=modoPago+((this.arrayDetalle[i].precioCompra)*1.0)*6.96
+                        modoPago=modoPago+((this.arrayDetalle[i].precioCompra)*1.0)*this.exchange_rate
                     }
                     }
                 }
-                }    
+                }
                 resultado=resultado-modoPago
                 console.log(modoPago);
                 return resultado;
             }
         },
-        methods : { 
+        methods : {
             cerrarModalCliente(){
                 
                 this.modalCliente=0;
@@ -1414,7 +1427,7 @@
                 me.arres2="registrado";
                 console.log(me.arrayDetalle.length);
                 console.log(me.arrayAgregarArticulo.length);
-            }, 
+            },
 
 
 
@@ -1425,7 +1438,7 @@
                     var respuesta= response.data;
                     me.arrayVenta = respuesta.ventas.data;
                     me.pagination= respuesta.pagination;
-                    me.fechav= respuesta.timer; 
+                    me.fechav= respuesta.timer;
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -1622,6 +1635,7 @@
                     'moneda' : this.moneda,
                     'vendedor' : this.vendedor,
                     'total' : this.total,
+                    'exchange_rate' : this.exchange_rate,
                     'totalParcial' : this.totalParcial,
                     'pago1' : this.pago1,
                     'pago2' : this.pago2,
@@ -1641,6 +1655,7 @@
                     me.moneda='Dolares';
                     me.vendedor='';
                     me.total=0.0;
+                    me.exchange_rate=6.96;
                     me.totalParcial=0.0;
                     me.pago1=0.0;
                     me.pago2=0.0;
@@ -1687,6 +1702,7 @@
                     me.moneda=arrayVentaT[0]['moneda'];
                     me.vendedor=arrayVentaT[0]['vendedor'];
                     me.total=arrayVentaT[0]['total'];
+                    me.exchange_rate=arrayVentaT[0]['exchange_rate'];
                     me.pago1=arrayVentaT[0]['pago1'];
                     me.pago2=arrayVentaT[0]['pago2'];
                     me.pago3=arrayVentaT[0]['pago3'];
@@ -1751,6 +1767,7 @@
                 });
 
                 if (me.idcliente==0) me.errorMostrarMsjVenta.push("Seleccione un Cliente");
+                if (me.exchange_rate<1) me.errorMostrarMsjVenta.push("Ingrese un tipo de cambio igual o mayor a 1.");
                 if (me.tipo_comprobante==0) me.errorMostrarMsjVenta.push("Sleccione el Comprobante");
                 //if (this.pago1==0) this.errorMostrarMsjVenta.push("Ingrese al menos 1 pago");
                 if (!me.num_comprobante) me.errorMostrarMsjVenta.push("Ingrese el numero de comprobante");
@@ -1774,6 +1791,7 @@
                     me.moneda='Dolares';
                     me.vendedor='';
                     me.total=0.0;
+                    me.exchange_rate=6.96;
                     me.pago1=0.0;
                     me.pago2=0.0;
                     me.pago3=0.0;
@@ -1787,6 +1805,7 @@
             ocultarDetalle(){
                 this.listado=1;
                 this.total=0.0;
+                this.exchange_rate=6.96;
                 this.pago1=0.0;
                 this.pago2=0.0;
                 this.pago3=0.0;
@@ -1822,6 +1841,7 @@
                     me.moneda=arrayVentaT[0]['moneda'];
                     me.vendedor=arrayVentaT[0]['vendedor'];
                     me.total=arrayVentaT[0]['total'];
+                    me.exchange_rate=arrayVentaT[0]['exchange_rate'];
                     me.pago1=arrayVentaT[0]['pago1'];
                     me.pago2=arrayVentaT[0]['pago2'];
                     me.pago3=arrayVentaT[0]['pago3'];
@@ -1892,9 +1912,9 @@
                     // Read more about handling dismissals
                     result.dismiss === swal.DismissReason.cancel
                 ) {
-                    
+                
                 }
-                }) 
+                })
             },
 
         },
@@ -1903,7 +1923,7 @@
         }
     }
 </script>
-<style>    
+<style>
     .modal-content{
         width: 100% !important;
         position: absolute !important;

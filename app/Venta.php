@@ -1,13 +1,13 @@
 <?php
- 
+
 namespace App;
- 
+
 use Illuminate\Database\Eloquent\Model;
- 
+
 class Venta extends Model
 {
     protected $fillable =[
-        'idcliente', 
+        'idcliente',
         'idusuario',
         'tipo_comprobante',
         'serie_comprobante',
@@ -17,6 +17,8 @@ class Venta extends Model
         'impuesto',
         'moneda',
         'total',
+        'exchange_rate',
+        'nota',
         'pago1',
         'pago2',
         'pago3',

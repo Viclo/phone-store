@@ -74834,6 +74834,17 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -74855,6 +74866,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             pago1: 0.0,
             pago2: 0.0,
             pago3: 0.0,
+            exchange_rate: 6.96,
             totalImpuesto: 0.0,
             totalParcial: 0.0,
             arrayIngreso: [],
@@ -75194,7 +75206,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                     });
                 }
 
-                //this.$forceUpdate(); 
+                //this.$forceUpdate();
             });
         },
         registrarIngreso: function registrarIngreso() {
@@ -75216,6 +75228,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 'pago1': this.pago1,
                 'pago2': this.pago2,
                 'pago3': this.pago3,
+                'exchange_rate': this.exchange_rate,
                 'data': this.arrayDetalle
 
             }).then(function (response) {
@@ -75232,6 +75245,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 me.pago1 = 0.0;
                 me.pago2 = 0.0;
                 me.pago3 = 0.0;
+                me.exchange_rate = 6.96;
                 me.idarticulo = 0;
                 me.articulo = '';
                 me.cantidad = 0;
@@ -75271,6 +75285,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 me.pago1 = arrayIngresoT[0]['pago1'];
                 me.pago2 = arrayIngresoT[0]['pago2'];
                 me.pago3 = arrayIngresoT[0]['pago3'];
+                me.exchange_rate = arrayIngresoT[0]['exchange_rate'];
                 me.fecha2 = arrayVentaT[0]['fecha_2'];
                 me.fecha3 = arrayVentaT[0]['fecha_3'];
             }).catch(function (error) {
@@ -75316,6 +75331,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             if (this.idproveedor == 0) this.errorMostrarMsjIngreso.push("Seleccione un Proveedor");
             if (this.tipo_comprobante == 0) this.errorMostrarMsjIngreso.push("Seleccione el Comprobante");
             if (this.pago1 == 0) this.errorMostrarMsjIngreso.push("Ingrese al menos 1 pago");
+            if (this.exchange_rate < 1) this.errorMostrarMsjIngreso.push("El tipo de cambio debe ser igual o mayor que 1.");
             if (!this.num_comprobante) this.errorMostrarMsjIngreso.push("Ingrese el numero de comprobante");
             // if (!this.fechai) this.errorMostrarMsjIngreso.push("Ingrese la fecha de ingreso");
             if (this.num_comprobante > 9999999999) this.errorMostrarMsjIngreso.push("El numero de comprobante es mayor a lo almacenado");
@@ -75340,6 +75356,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             me.pago1 = 0.0;
             me.pago2 = 0.0;
             me.pago3 = 0.0;
+            me.exchange_rate = 6.96;
             me.idarticulo = 0;
             me.articulo = '';
             me.cantidad = 0;
@@ -75371,6 +75388,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 me.moneda = arrayIngresoT[0]['moneda'];
                 me.pago1 = arrayIngresoT[0]['pago1'];
                 me.pago2 = arrayIngresoT[0]['pago2'];
+                me.exchange_rate = arrayIngresoT[0]['exchange_rate'];
                 me.fechai2 = arrayIngresoT[0]['fecha_2'];
                 me.fechai3 = arrayIngresoT[0]['fecha_3'];
                 me.pago3 = arrayIngresoT[0]['pago3'];
@@ -76286,7 +76304,7 @@ var render = function() {
                         ])
                       ]),
                       _vm._v(" "),
-                      _c("div", { staticClass: "col-md-3" }, [
+                      _c("div", { staticClass: "col-md-4" }, [
                         _c("div", { staticClass: "form-group" }, [
                           _c("label", [_vm._v("Tipo de Pago ")]),
                           _vm._v(" "),
@@ -76329,6 +76347,34 @@ var render = function() {
                               ])
                             ]
                           )
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-2" }, [
+                        _c("div", { staticClass: "form-group" }, [
+                          _c("label", [_vm._v("Tipo de Cambio al Dólar")]),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.exchange_rate,
+                                expression: "exchange_rate"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            attrs: { type: "number", value: "6.96" },
+                            domProps: { value: _vm.exchange_rate },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.exchange_rate = $event.target.value
+                              }
+                            }
+                          })
                         ])
                       ])
                     ]),
@@ -76544,7 +76590,9 @@ var render = function() {
                                           _vm._v(
                                             "$ " +
                                               _vm._s(
-                                                (_vm.total * 6.96).toFixed(2)
+                                                (
+                                                  _vm.total * _vm.exchange_rate
+                                                ).toFixed(2)
                                               )
                                           )
                                         ])
@@ -76753,7 +76801,9 @@ var render = function() {
                                           _vm._v(
                                             "$ " +
                                               _vm._s(
-                                                (_vm.total / 6.96).toFixed(2)
+                                                (
+                                                  _vm.total / _vm.exchange_rate
+                                                ).toFixed(2)
                                               )
                                           )
                                         ])
@@ -77049,6 +77099,18 @@ var render = function() {
                       ]),
                       _vm._v(" "),
                       _c("div", { staticClass: "col-md-3" }, [
+                        _c("div", { staticClass: "form-group" }, [
+                          _c("label", { attrs: { for: "" } }, [
+                            _vm._v("Tipo de Cambio")
+                          ]),
+                          _vm._v(" "),
+                          _c("p", {
+                            domProps: { textContent: _vm._s(_vm.exchange_rate) }
+                          })
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-3" }, [
                         _c("label", { attrs: { for: "" } }, [
                           _vm._v("Impuesto")
                         ]),
@@ -77231,7 +77293,9 @@ var render = function() {
                                           _vm._v(
                                             "$ " +
                                               _vm._s(
-                                                (_vm.total * 6.96).toFixed(2)
+                                                (
+                                                  _vm.total * _vm.exchange_rate
+                                                ).toFixed(2)
                                               )
                                           )
                                         ])
@@ -77366,7 +77430,9 @@ var render = function() {
                                           _vm._v(
                                             "$ " +
                                               _vm._s(
-                                                (_vm.total / 6.96).toFixed(2)
+                                                (
+                                                  _vm.total / _vm.exchange_rate
+                                                ).toFixed(2)
                                               )
                                           )
                                         ])
@@ -77586,7 +77652,7 @@ var render = function() {
                       _vm._v(" "),
                       _c("div", { staticClass: "col-md-4" }, [
                         _c("div", { staticClass: "form-group" }, [
-                          _c("label", [_vm._v("Primerpago")]),
+                          _c("label", [_vm._v("Primer pago")]),
                           _vm._v(" "),
                           _c("p", {
                             domProps: { textContent: _vm._s(_vm.pago1) }
@@ -79311,10 +79377,12 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             }).then(function (response) {
                 me.listado = 1;
                 me.listarTransferencia(1, '', 'num_comprobante');
+                swal('Confirmado!', 'La Transferencia ha sido Registrada con éxito.', 'success');
             }).catch(function (error) {
                 console.log(error);
             }).finally(function () {
                 _this.isAddingTransfer = false;
+                me.listarTransferencia(1, me.buscar, me.criterio);
             });
         }
     }, _defineProperty(_methods, 'selectSucursal', function selectSucursal() {
@@ -86624,6 +86692,18 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -86644,6 +86724,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             pago1: 0.0,
             pago2: 0.0,
             pago3: 0.0,
+            exchange_rate: 6.96,
             totalImpuesto: 0.0,
             totalParcial: 0.0,
             arrayVenta: [],
@@ -86729,9 +86810,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                     if (this.arrayDetalle[i].idcategoria == 2) {
                         if (this.arrayDetalle[i].estado == 0) {
 
-                            resultado = resultado + (this.arrayDetalle[i].precio / 6.96 * this.arrayDetalle[i].cantidad - this.arrayDetalle[i].descuento);
+                            resultado = resultado + (this.arrayDetalle[i].precio / this.exchange_rate * this.arrayDetalle[i].cantidad - this.arrayDetalle[i].descuento);
                         } else {
-                            modoPago = modoPago + this.arrayDetalle[i].precioCompra * 1.0 / 6.96;
+                            modoPago = modoPago + this.arrayDetalle[i].precioCompra * 1.0 / this.exchange_rate;
                         }
                     } else {
                         if (this.arrayDetalle[i].estado == 0) {
@@ -86754,9 +86835,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                     } else {
                         if (this.arrayDetalle[i].estado == 0) {
 
-                            resultado = resultado + (this.arrayDetalle[i].precio * 6.96 * this.arrayDetalle[i].cantidad - this.arrayDetalle[i].descuento);
+                            resultado = resultado + (this.arrayDetalle[i].precio * this.exchange_rate * this.arrayDetalle[i].cantidad - this.arrayDetalle[i].descuento);
                         } else {
-                            modoPago = modoPago + this.arrayDetalle[i].precioCompra * 1.0 * 6.96;
+                            modoPago = modoPago + this.arrayDetalle[i].precioCompra * 1.0 * this.exchange_rate;
                         }
                     }
                 }
@@ -87134,6 +87215,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 'moneda': this.moneda,
                 'vendedor': this.vendedor,
                 'total': this.total,
+                'exchange_rate': this.exchange_rate,
                 'totalParcial': this.totalParcial,
                 'pago1': this.pago1,
                 'pago2': this.pago2,
@@ -87153,6 +87235,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 me.moneda = 'Dolares';
                 me.vendedor = '';
                 me.total = 0.0;
+                me.exchange_rate = 6.96;
                 me.totalParcial = 0.0;
                 me.pago1 = 0.0;
                 me.pago2 = 0.0;
@@ -87197,6 +87280,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 me.moneda = arrayVentaT[0]['moneda'];
                 me.vendedor = arrayVentaT[0]['vendedor'];
                 me.total = arrayVentaT[0]['total'];
+                me.exchange_rate = arrayVentaT[0]['exchange_rate'];
                 me.pago1 = arrayVentaT[0]['pago1'];
                 me.pago2 = arrayVentaT[0]['pago2'];
                 me.pago3 = arrayVentaT[0]['pago3'];
@@ -87257,6 +87341,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             });
 
             if (me.idcliente == 0) me.errorMostrarMsjVenta.push("Seleccione un Cliente");
+            if (me.exchange_rate < 1) me.errorMostrarMsjVenta.push("Ingrese un tipo de cambio igual o mayor a 1.");
             if (me.tipo_comprobante == 0) me.errorMostrarMsjVenta.push("Sleccione el Comprobante");
             //if (this.pago1==0) this.errorMostrarMsjVenta.push("Ingrese al menos 1 pago");
             if (!me.num_comprobante) me.errorMostrarMsjVenta.push("Ingrese el numero de comprobante");
@@ -87280,6 +87365,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
             me.moneda = 'Dolares';
             me.vendedor = '';
             me.total = 0.0;
+            me.exchange_rate = 6.96;
             me.pago1 = 0.0;
             me.pago2 = 0.0;
             me.pago3 = 0.0;
@@ -87293,6 +87379,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         ocultarDetalle: function ocultarDetalle() {
             this.listado = 1;
             this.total = 0.0;
+            this.exchange_rate = 6.96;
             this.pago1 = 0.0;
             this.pago2 = 0.0;
             this.pago3 = 0.0;
@@ -87328,6 +87415,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
                 me.moneda = arrayVentaT[0]['moneda'];
                 me.vendedor = arrayVentaT[0]['vendedor'];
                 me.total = arrayVentaT[0]['total'];
+                me.exchange_rate = arrayVentaT[0]['exchange_rate'];
                 me.pago1 = arrayVentaT[0]['pago1'];
                 me.pago2 = arrayVentaT[0]['pago2'];
                 me.pago3 = arrayVentaT[0]['pago3'];
@@ -88357,6 +88445,34 @@ var render = function() {
                       _vm._v(" "),
                       _c("div", { staticClass: "col-md-2" }, [
                         _c("div", { staticClass: "form-group" }, [
+                          _c("label", [_vm._v("Tipo de Cambio al Dólar")]),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.exchange_rate,
+                                expression: "exchange_rate"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            attrs: { type: "number", value: "6.96" },
+                            domProps: { value: _vm.exchange_rate },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.exchange_rate = $event.target.value
+                              }
+                            }
+                          })
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "col-md-2" }, [
+                        _c("div", { staticClass: "form-group" }, [
                           _c(
                             "button",
                             {
@@ -88459,7 +88575,10 @@ var render = function() {
                                           ? _c("td", [
                                               _c("p", [
                                                 _vm._v(
-                                                  _vm._s(detalle.precio / 6.96)
+                                                  _vm._s(
+                                                    detalle.precio /
+                                                      _vm.exchange_rate
+                                                  )
                                                 )
                                               ])
                                             ])
@@ -88538,10 +88657,10 @@ var render = function() {
                                                       value:
                                                         detalle.descuento >
                                                         (detalle.precio /
-                                                          6.96) *
+                                                          _vm.exchange_rate) *
                                                           detalle.cantidad,
                                                       expression:
-                                                        "detalle.descuento>((detalle.precio/6.96)*detalle.cantidad)"
+                                                        "detalle.descuento>((detalle.precio/exchange_rate)*detalle.cantidad)"
                                                     }
                                                   ],
                                                   staticStyle: { color: "red" }
@@ -88642,7 +88761,8 @@ var render = function() {
                                               _vm._v(
                                                 "\n                                        " +
                                                   _vm._s(
-                                                    (detalle.precio / 6.96) *
+                                                    (detalle.precio /
+                                                      _vm.exchange_rate) *
                                                       detalle.cantidad -
                                                       detalle.descuento
                                                   ) +
@@ -88754,8 +88874,10 @@ var render = function() {
                                             "$ " +
                                               _vm._s(
                                                 (
-                                                  _vm.total * 6.96 +
-                                                  _vm.totalImpuesto * 6.96
+                                                  _vm.total *
+                                                    _vm.exchange_rate +
+                                                  _vm.totalImpuesto *
+                                                    _vm.exchange_rate
                                                 ).toFixed(2)
                                               )
                                           )
@@ -88833,7 +88955,10 @@ var render = function() {
                                           ? _c("td", [
                                               _c("p", [
                                                 _vm._v(
-                                                  _vm._s(detalle.precio * 6.96)
+                                                  _vm._s(
+                                                    detalle.precio *
+                                                      _vm.exchange_rate
+                                                  )
                                                 )
                                               ])
                                             ])
@@ -88966,10 +89091,10 @@ var render = function() {
                                                       value:
                                                         detalle.descuento >
                                                         detalle.precio *
-                                                          6.96 *
+                                                          _vm.exchange_rate *
                                                           detalle.cantidad,
                                                       expression:
-                                                        "detalle.descuento>((detalle.precio*6.96)*detalle.cantidad)"
+                                                        "detalle.descuento>((detalle.precio*exchange_rate)*detalle.cantidad)"
                                                     }
                                                   ],
                                                   staticStyle: { color: "red" }
@@ -89031,7 +89156,7 @@ var render = function() {
                                                 "\n                                        " +
                                                   _vm._s(
                                                     detalle.precio *
-                                                      6.96 *
+                                                      _vm.exchange_rate *
                                                       detalle.cantidad -
                                                       detalle.descuento
                                                   ) +
@@ -89128,8 +89253,10 @@ var render = function() {
                                             "$ " +
                                               _vm._s(
                                                 (
-                                                  _vm.total / 6.96 +
-                                                  _vm.totalImpuesto / 6.96
+                                                  _vm.total /
+                                                    _vm.exchange_rate +
+                                                  _vm.totalImpuesto /
+                                                    _vm.exchange_rate
                                                 ).toFixed(2)
                                               )
                                           )
@@ -89479,6 +89606,20 @@ var render = function() {
                         ]),
                         _vm._v(" "),
                         _c("div", { staticClass: "col-md-3" }, [
+                          _c("div", { staticClass: "form-group" }, [
+                            _c("label", { attrs: { for: "" } }, [
+                              _vm._v("Tipo de Cambio")
+                            ]),
+                            _vm._v(" "),
+                            _c("p", {
+                              domProps: {
+                                textContent: _vm._s(_vm.exchange_rate)
+                              }
+                            })
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "col-md-3" }, [
                           _c("label", { attrs: { for: "" } }, [
                             _vm._v("Impuesto")
                           ]),
@@ -89620,7 +89761,10 @@ var render = function() {
                                           ? _c("td", [
                                               _c("p", [
                                                 _vm._v(
-                                                  _vm._s(detalle.precio / 6.96)
+                                                  _vm._s(
+                                                    detalle.precio /
+                                                      _vm.exchange_rate
+                                                  )
                                                 )
                                               ])
                                             ])
@@ -89669,7 +89813,8 @@ var render = function() {
                                               _vm._v(
                                                 "\n                                        " +
                                                   _vm._s(
-                                                    (detalle.precio / 6.96) *
+                                                    (detalle.precio /
+                                                      _vm.exchange_rate) *
                                                       detalle.cantidad -
                                                       detalle.descuento
                                                   ) +
@@ -89759,8 +89904,12 @@ var render = function() {
                                           _vm._v(
                                             "$ " +
                                               _vm._s(
-                                                _vm.total * 6.96 +
-                                                  _vm.totalImpuesto * 6.96
+                                                (
+                                                  _vm.total *
+                                                    _vm.exchange_rate +
+                                                  _vm.totalImpuesto *
+                                                    _vm.exchange_rate
+                                                ).toFixed(2)
                                               )
                                           )
                                         ])
@@ -89802,7 +89951,10 @@ var render = function() {
                                           ? _c("td", [
                                               _c("p", [
                                                 _vm._v(
-                                                  _vm._s(detalle.precio * 6.96)
+                                                  _vm._s(
+                                                    detalle.precio *
+                                                      _vm.exchange_rate
+                                                  )
                                                 )
                                               ])
                                             ])
@@ -89846,7 +89998,7 @@ var render = function() {
                                                 "\n                                        " +
                                                   _vm._s(
                                                     detalle.precio *
-                                                      6.96 *
+                                                      _vm.exchange_rate *
                                                       detalle.cantidad -
                                                       detalle.descuento
                                                   ) +
@@ -89948,8 +90100,12 @@ var render = function() {
                                           _vm._v(
                                             "$ " +
                                               _vm._s(
-                                                _vm.total / 6.96 +
-                                                  _vm.totalImpuesto / 6.96
+                                                (
+                                                  _vm.total /
+                                                    _vm.exchange_rate +
+                                                  _vm.totalImpuesto /
+                                                    _vm.exchange_rate
+                                                ).toFixed(2)
                                               )
                                           )
                                         ])
@@ -90342,7 +90498,10 @@ var render = function() {
                                           ? _c("td", [
                                               _c("p", [
                                                 _vm._v(
-                                                  _vm._s(detalle.precio / 6.96)
+                                                  _vm._s(
+                                                    detalle.precio /
+                                                      _vm.exchange_rate
+                                                  )
                                                 )
                                               ])
                                             ])
@@ -90387,7 +90546,8 @@ var render = function() {
                                               _vm._v(
                                                 "\n                                        " +
                                                   _vm._s(
-                                                    (detalle.precio / 6.96) *
+                                                    (detalle.precio /
+                                                      _vm.exchange_rate) *
                                                       detalle.cantidad -
                                                       detalle.descuento
                                                   ) +
@@ -90477,8 +90637,9 @@ var render = function() {
                                           _vm._v(
                                             "$ " +
                                               _vm._s(
-                                                _vm.total * 6.96 +
-                                                  _vm.totalImpuesto * 6.96
+                                                _vm.total * _vm.exchange_rate +
+                                                  _vm.totalImpuesto *
+                                                    _vm.exchange_rate
                                               )
                                           )
                                         ])
@@ -90512,7 +90673,10 @@ var render = function() {
                                           ? _c("td", [
                                               _c("p", [
                                                 _vm._v(
-                                                  _vm._s(detalle.precio * 6.96)
+                                                  _vm._s(
+                                                    detalle.precio *
+                                                      _vm.exchange_rate
+                                                  )
                                                 )
                                               ])
                                             ])
@@ -90552,7 +90716,7 @@ var render = function() {
                                                 "\n                                        " +
                                                   _vm._s(
                                                     detalle.precio *
-                                                      6.96 *
+                                                      _vm.exchange_rate *
                                                       detalle.cantidad -
                                                       detalle.descuento
                                                   ) +
@@ -90654,8 +90818,9 @@ var render = function() {
                                           _vm._v(
                                             "$ " +
                                               _vm._s(
-                                                _vm.total / 6.96 +
-                                                  _vm.totalImpuesto / 6.96
+                                                _vm.total / _vm.exchange_rate +
+                                                  _vm.totalImpuesto /
+                                                    _vm.exchange_rate
                                               )
                                           )
                                         ])
@@ -92057,7 +92222,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("td", { attrs: { colspan: "6", align: "right" } }, [
+    return _c("td", { attrs: { colspan: "7", align: "right" } }, [
       _c("strong", [_vm._v("Total Neto:")])
     ])
   },
@@ -92065,7 +92230,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("td", { attrs: { colspan: "6", align: "right" } }, [
+    return _c("td", { attrs: { colspan: "7", align: "right" } }, [
       _c("strong", [_vm._v("Total Impuesto:")])
     ])
   },
@@ -92073,7 +92238,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("td", { attrs: { colspan: "6", align: "right" } }, [
+    return _c("td", { attrs: { colspan: "7", align: "right" } }, [
       _c("strong", [_vm._v("Total Parcial:")])
     ])
   },
@@ -92081,7 +92246,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("td", { attrs: { colspan: "6", align: "right" } }, [
+    return _c("td", { attrs: { colspan: "7", align: "right" } }, [
       _c("strong", [_vm._v("Total Neto en Bolivianos:")])
     ])
   },
@@ -92089,7 +92254,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("td", { attrs: { colspan: "6", align: "right" } }, [
+    return _c("td", { attrs: { colspan: "7", align: "right" } }, [
       _c("strong", [_vm._v("Total Neto:")])
     ])
   },
@@ -92097,7 +92262,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("td", { attrs: { colspan: "6", align: "right" } }, [
+    return _c("td", { attrs: { colspan: "7", align: "right" } }, [
       _c("strong", [_vm._v("Total Impuesto:")])
     ])
   },
@@ -92105,7 +92270,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("td", { attrs: { colspan: "6", align: "right" } }, [
+    return _c("td", { attrs: { colspan: "7", align: "right" } }, [
       _c("strong", [_vm._v("Total Parcial:")])
     ])
   },
@@ -92113,7 +92278,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("td", { attrs: { colspan: "6", align: "right" } }, [
+    return _c("td", { attrs: { colspan: "7", align: "right" } }, [
       _c("strong", [_vm._v("Total Neto en Dolares:")])
     ])
   },

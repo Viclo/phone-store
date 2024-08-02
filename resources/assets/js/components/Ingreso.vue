@@ -40,7 +40,7 @@
                                         <th>Usuario</th>
                                         <th>Proveedor</th>
                                         <th>Tipo Comprobante</th>
-                                        <th>Número Comprobante</th>                                       
+                                        <th>Número Comprobante</th>
                                         <th>Fecha Hora</th>
                                         <th>Tipo Moneda</th>
                                         <th>Total</th>
@@ -74,13 +74,13 @@
                                         <td v-text="ingreso.usuario"></td>
                                         <td v-text="ingreso.nombre"></td>
                                         <td v-text="ingreso.tipo_comprobante"></td>
-                                        <td v-text="ingreso.num_comprobante"></td>                                      
+                                        <td v-text="ingreso.num_comprobante"></td>
                                         <td v-text="ingreso.fecha_hora"></td>
                                         <td v-text="ingreso.moneda"></td>
                                         <td v-text="ingreso.total"></td>
                                         <td v-text="ingreso.impuesto"></td>
                                         <td v-text="ingreso.estado"></td>
-                                    </tr>                                
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -114,7 +114,7 @@
                                         placeholder="Buscar Proveedores..."
                                         :onChange="getDatosProveedor"
                                     >
-                                        
+                                    
                                     </v-select>
                                 </div>
                             </div>
@@ -167,7 +167,7 @@
                                         <input type="text" class="form-control" v-model="codigo" @keyup.enter="buscarMote()" placeholder="Ingrese artículo">
                                         <button @click="abrirModal()" class="btn btn-primary">...</button>
                                        <!-- <input type="text" readonly class="form-control" v-model="articulo">-->
-                                    </div>                                    
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-md-2">
@@ -188,7 +188,7 @@
                                     <input type="number" value="0" class="form-control" v-model="pago3">
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Tipo de Pago </label>
                                     <select class="form-control col-md-4" v-model="moneda">
@@ -197,7 +197,12 @@
                                     </select>
                                 </div>
                             </div>
-                            
+                            <div class="col-md-2">
+                                <div class="form-group">
+                                    <label>Tipo de Cambio al Dólar</label>
+                                    <input type="number" value="6.96" class="form-control" v-model="exchange_rate">
+                                </div>
+                            </div>
                         </div>
                        
                         <div class="form-group row border">
@@ -244,10 +249,10 @@
                                         </tr>
                                         <tr style="background-color: #CEECF5;">
                                             <td colspan="4" align="right"><strong>Total Neto en Bolivianos:</strong></td>
-                                            <td>$ {{(total*6.96).toFixed(2)}}</td>
+                                            <td>$ {{(total*exchange_rate).toFixed(2)}}</td>
                                         </tr>
-                                    </tbody> 
-                                     
+                                    </tbody>
+                                    
                                     <tbody v-else-if="arrayAgregarArticulo.length && moneda=='Bolivianos'">
                                         <tr v-for="(detalle,index) in arrayAgregarArticulo" :key="detalle.id">
                                             <td>
@@ -280,10 +285,10 @@
                                         </tr>
                                         <tr style="background-color: #CEECF5;">
                                             <td colspan="4" align="right"><strong>Total Neto en Dolares:</strong></td>
-                                            <td>$ {{(total/6.96).toFixed(2)}}</td>
+                                            <td>$ {{(total/exchange_rate).toFixed(2)}}</td>
                                         </tr>
-                                    </tbody> 
-                                                                     
+                                    </tbody>
+                                    
                                 </table>
                                
                             </div>
@@ -324,14 +329,14 @@
                                                 <input v-model="detalle.codigo" type="text" value="3" class="form-control" >
                                             </td>
                                         </tr>
-                                    </tbody>  
+                                    </tbody>
                                     <tbody v-else>
                                         <tr>
                                             <td colspan="5">
                                                 No hay articulos agregados
                                             </td>
                                         </tr>
-                                    </tbody>                                  
+                                    </tbody>
                                 </table>
                                 
                             </div>
@@ -374,6 +379,12 @@
                                 <div class="form-group">
                                     <label for="">Moneda</label>
                                     <p v-text="moneda"></p>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label for="">Tipo de Cambio</label>
+                                    <p v-text="exchange_rate"></p>
                                 </div>
                             </div>
                             <div class="col-md-3">
@@ -439,7 +450,7 @@
                                         </tr>
                                         <tr style="background-color: #CEECF5;">
                                             <td colspan="4" align="right"><strong>Total Neto en Bolivianos:</strong></td>
-                                            <td>$ {{(total*6.96).toFixed(2)}}</td>
+                                            <td>$ {{(total*exchange_rate).toFixed(2)}}</td>
                                         </tr>
                                     </tbody>
                                     <tbody v-else-if="arrayDetalle.length && moneda=='Bolivianos'">
@@ -470,16 +481,16 @@
                                         </tr>
                                         <tr style="background-color: #CEECF5;">
                                             <td colspan="4" align="right"><strong>Total Neto en Dolares:</strong></td>
-                                            <td>$ {{(total/6.96).toFixed(2)}}</td>
+                                            <td>$ {{(total/exchange_rate).toFixed(2)}}</td>
                                         </tr>
-                                    </tbody>    
+                                    </tbody>
                                     <tbody v-else>
                                         <tr>
                                             <td colspan="4">
                                                 No hay articulos agregados
                                             </td>
                                         </tr>
-                                    </tbody>                                  
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
@@ -491,9 +502,9 @@
                         <template v-if="pago2!=0">
                             <P>Se pago en Cuotas</P>
                             <p>El primer pago fue de {{pago1}}$</p>
-                            <p>Se realizo el segundo pago de {{pago2}}$ en fecha {{fechai2}}</p> 
+                            <p>Se realizo el segundo pago de {{pago2}}$ en fecha {{fechai2}}</p>
                             <template v-if="pago3!=0">
-                            <p>Se realizo el tercer pago de {{pago3}}$ en fecha {{fechai3}} </p> 
+                            <p>Se realizo el tercer pago de {{pago3}}$ en fecha {{fechai3}} </p>
                             </template>
                         </template>
                         <div class="form-group row">
@@ -557,7 +568,7 @@
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group">
-                                    <label>Primerpago</label>
+                                    <label>Primer pago</label>
                                     <p v-text="pago1"></p>
                                 </div>
                             </div>
@@ -608,14 +619,14 @@
                                             <td colspan="3" align="right"><strong>Total Neto:</strong></td>
                                             <td>$ {{total}}</td>
                                         </tr>
-                                    </tbody>  
+                                    </tbody>
                                     <tbody v-else>
                                         <tr>
                                             <td colspan="4">
                                                 No hay articulos agregados
                                             </td>
                                         </tr>
-                                    </tbody>                                  
+                                    </tbody>
                                 </table>
                             </div>
                         </div>
@@ -658,7 +669,7 @@
                                         <select class="form-control" v-model="idcategoria">
                                             <option value="0" disabled>Seleccione</option>
                                             <option v-for="categoria in arrayCategoria" :key="categoria.id" :value="categoria.id" v-text="categoria.nombre"></option>
-                                        </select>                                        
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -667,7 +678,7 @@
                                         <select class="form-control" v-model="idsucursal">
                                             <option value="0" disabled>Seleccione</option>
                                             <option v-for="sucursal in arraySucursal" :key="sucursal.id" :value="sucursal.id" v-text="sucursal.nombre"></option>
-                                        </select>                                        
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="form-group row">
@@ -676,25 +687,25 @@
                                         <select class="form-control" v-model="idmarca">
                                             <option value="0" disabled>Seleccione</option>
                                             <option v-for="marca in arrayMarca" :key="marca.id" :value="marca.id" v-text="marca.nombre"></option>
-                                        </select>                                        
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="text-input">Nombre</label>
                                     <div class="col-md-9">
-                                        <input type="text" v-model="articuloNombre" class="form-control" placeholder="Nombre de artículo">                                        
+                                        <input type="text" v-model="articuloNombre" class="form-control" placeholder="Nombre de artículo">
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <label class="col-md-3 form-control-label" for="text-input">Precio Mercado</label>
                                     <div class="col-md-9">
-                                        <input type="number" v-model="precioMercado" class="form-control" placeholder="Precio al Mercado">                                        
+                                        <input type="number" v-model="precioMercado" class="form-control" placeholder="Precio al Mercado">
                                     </div>
                                 </div>
                                 <div v-if="idcategoria==2" class="form-group row">
                                     <label class="col-md-3 form-control-label" for="text-input">Codigo</label>
                                     <div class="col-md-9">
-                                        <input type="text" v-model="codigo" class="form-control" placeholder="Ingrese el Codigo">                                        
+                                        <input type="text" v-model="codigo" class="form-control" placeholder="Ingrese el Codigo">
                                     </div>
                                 </div>
 
@@ -732,6 +743,7 @@
                 pago1:0.0,
                 pago2:0.0,
                 pago3:0.0,
+                exchange_rate:6.96,
                 totalImpuesto: 0.0,
                 totalParcial: 0.0,
                 arrayIngreso : [],
@@ -809,22 +821,22 @@
                     return [];
                 }
                 
-                var from = this.pagination.current_page - this.offset; 
+                var from = this.pagination.current_page - this.offset;
                 if(from < 1) {
                     from = 1;
                 }
 
-                var to = from + (this.offset * 2); 
+                var to = from + (this.offset * 2);
                 if(to >= this.pagination.last_page){
                     to = this.pagination.last_page;
-                }  
+                }
 
                 var pagesArray = [];
                 while(from <= to) {
                     pagesArray.push(from);
                     from++;
                 }
-                return pagesArray;             
+                return pagesArray;
 
             },
 
@@ -955,7 +967,7 @@
                 let articulo=me.arrayAgregarArticulo[index];
                 me.arrayAgregarArticulo.splice(index, 1);
                console.log(me.arrayLLenado.length);
-                for (var i = 0; i <me.arrayLLenado.length; i++) { 
+                for (var i = 0; i <me.arrayLLenado.length; i++) {
                     if(me.arrayLLenado[i].articulo==articulo.articulo){
                         me.arrayLLenado.splice(i, 1);
                         console.log(i);
@@ -963,7 +975,7 @@
                     }
                     
                 }
-                 
+                
                 console.log(me.arrayLLenado);
 
                
@@ -1046,7 +1058,7 @@
                     cantidad: 1,
                     precio: 1,
                 });
-                    
+                
                 } else {
                     me.arrayAgregarArticulo.push({
                     codigo:this.codigo,
@@ -1071,7 +1083,7 @@
             llenarArrayArticulo(){
                 let me=this;
                 
-                for (var i = 0; i < me.arrayAgregarArticulo.length; i++) { 
+                for (var i = 0; i < me.arrayAgregarArticulo.length; i++) {
                     let articulo=me.arrayAgregarArticulo[i];
                     if (articulo.idcategoria==2) {
                         me.arrayLLenado.push({
@@ -1087,7 +1099,7 @@
                         });
                         
                     } else {
-                        for (var j = 0; j < articulo.cantidad; j++) { 
+                        for (var j = 0; j < articulo.cantidad; j++) {
                           me.arrayLLenado.push({
                             codigo:'',
                             precioMercado:articulo.precioMercado,
@@ -1147,8 +1159,8 @@
                     console.log(error);
                     });
                 }
-                    
-                   //this.$forceUpdate(); 
+                   
+                   //this.$forceUpdate();
                 }
                 )
             },
@@ -1172,6 +1184,7 @@
                     'pago1' : this.pago1,
                     'pago2' : this.pago2,
                     'pago3' : this.pago3,
+                    'exchange_rate' : this.exchange_rate,
                     'data' : this.arrayDetalle
 
                 }).then(function (response) {
@@ -1188,6 +1201,7 @@
                     me.pago1=0.0;
                     me.pago2=0.0;
                     me.pago3=0.0;
+                    me.exchange_rate=6.96;
                     me.idarticulo=0;
                     me.articulo='';
                     me.cantidad=0;
@@ -1228,6 +1242,7 @@
                     me.pago1=arrayIngresoT[0]['pago1'];
                     me.pago2=arrayIngresoT[0]['pago2'];
                     me.pago3=arrayIngresoT[0]['pago3'];
+                    me.exchange_rate=arrayIngresoT[0]['exchange_rate'];
                     me.fecha2=arrayVentaT[0]['fecha_2'];
                     me.fecha3=arrayVentaT[0]['fecha_3'];
                 })
@@ -1277,6 +1292,7 @@
                 if (this.idproveedor==0) this.errorMostrarMsjIngreso.push("Seleccione un Proveedor");
                 if (this.tipo_comprobante==0) this.errorMostrarMsjIngreso.push("Seleccione el Comprobante");
                 if (this.pago1==0) this.errorMostrarMsjIngreso.push("Ingrese al menos 1 pago");
+                if (this.exchange_rate<1) this.errorMostrarMsjIngreso.push("El tipo de cambio debe ser igual o mayor que 1.");
                 if (!this.num_comprobante) this.errorMostrarMsjIngreso.push("Ingrese el numero de comprobante");
                // if (!this.fechai) this.errorMostrarMsjIngreso.push("Ingrese la fecha de ingreso");
                 if (this.num_comprobante>9999999999) this.errorMostrarMsjIngreso.push("El numero de comprobante es mayor a lo almacenado");
@@ -1301,6 +1317,7 @@
                     me.pago1=0.0;
                     me.pago2=0.0;
                     me.pago3=0.0;
+                    me.exchange_rate=6.96;
                     me.idarticulo=0;
                     me.articulo='';
                     me.cantidad=0;
@@ -1326,12 +1343,13 @@
                     me.tipo_comprobante=arrayIngresoT[0]['tipo_comprobante'];
                     me.serie_comprobante=arrayIngresoT[0]['serie_comprobante'];
                     me.num_comprobante=arrayIngresoT[0]['num_comprobante'];
-                    me.impuesto=arrayIngresoT[0]['impuesto']; 
+                    me.impuesto=arrayIngresoT[0]['impuesto'];
                     me.estado=arrayIngresoT[0]['estado'];
                     me.total=arrayIngresoT[0]['total'];
                     me.moneda=arrayIngresoT[0]['moneda'];
                     me.pago1=arrayIngresoT[0]['pago1'];
                     me.pago2=arrayIngresoT[0]['pago2'];
+                    me.exchange_rate=arrayIngresoT[0]['exchange_rate'];
                     me.fechai2=arrayIngresoT[0]['fecha_2'];
                     me.fechai3=arrayIngresoT[0]['fecha_3'];
                     me.pago3=arrayIngresoT[0]['pago3'];
@@ -1406,9 +1424,9 @@
                     // Read more about handling dismissals
                     result.dismiss === swal.DismissReason.cancel
                 ) {
-                    
+                
                 }
-                }) 
+                })
             },
 
         },
@@ -1418,7 +1436,7 @@
         }
     }
 </script>
-<style>    
+<style>
     .modal-content{
         width: 100% !important;
         position: absolute !important;
